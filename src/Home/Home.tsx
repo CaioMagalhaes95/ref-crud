@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 export default function Home() {
     const [data, setData] = useState<any[]>([]);
+    const [search, setSearch] = useState('')
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -24,9 +25,15 @@ export default function Home() {
         .catch(err => console.log(err))
     }   
 
+    const filteredData = data.filter((user) => 
+        user.name.toLowerCase().includes(search.toLowerCase())
+        || user.email.toLowerCase().includes(search.toLowerCase())
+    )
+
   return (
     <div className="container mx-auto p-4 flex flex-col items-center">
         <button className="rounded bg-green-600 m-2 p-2 hover:bg-green-700 text-white" onClick={(e) => navigate("/input")}>Adicionar Usuário</button>
+        <input className="rounded shadow w-100 m-2 p-2" placeholder='Search...' onChange={(e) => setSearch(e.target.value)}></input>
         <table className="w-150 table table-striped table-bordered mt-4 w-75 mx-auto bg-gray-200">
             <thead className="bg-gray-400 text-gray-800 shadow-lg text-center">
                 <tr>
@@ -37,7 +44,7 @@ export default function Home() {
                 </tr>
             </thead>
             <tbody className="text-center text-gray-700 font-medium">
-                {data.map(user => (
+                {filteredData.map(user => (
                     <tr key={user.id}>
                         
                         <td>{user.name}</td>
